@@ -3,12 +3,12 @@
 """
 Tache
 """
+from ._compat import basestring
 from .batch import Batch
 from .cached import Cached
 from .utils import (arguments_key_generator,
                     arguments_batch_keys_generator,
                     )
-from ._compat import basestring
 
 
 class Tache(object):
@@ -21,7 +21,7 @@ class Tache(object):
                should_cache_fn=lambda _: True):
         origin_key_func = key_func
         if isinstance(origin_key_func, basestring):
-            key_func = lambda namespace, fn, *args, **kwargs: origin_key_func.format(*args, **kwargs) # noqa
+            key_func = lambda namespace, fn, *args, **kwargs: origin_key_func.format(*args, **kwargs)  # noqa
         else:
             key_func = key_func or self.default_key_generator
         return lambda fn: Cached(fn, backend=self.backend,

@@ -15,13 +15,13 @@ try:
     import cPickle as pickle
 except ImportError:
     import pickle
+
     logging.warning("can't import cpickle, use pickle instead")
 
 from sqlalchemy.engine import ResultProxy, RowProxy
 from sqlalchemy.ext.declarative import DeclarativeMeta
 
 from ._compat import basestring
-
 
 SEQUENCE_TYPES = [list, tuple, set, frozenset]
 

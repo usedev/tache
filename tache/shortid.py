@@ -1,15 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import time
 import random
+import time
 
 #: Epoch for simpleflake timestamps, starts at the year 2000
 SIMPLEFLAKE_EPOCH = 946702800
 
-
 SIMPLEFLAKE_RANDOM_LENGTH = 16
 SIMPLEFLAKE_TIMESTAMP_SHIFT = 8
-
 
 
 def simpleflake(timestamp=None, random_bits=None, epoch=SIMPLEFLAKE_EPOCH):
@@ -74,6 +72,7 @@ class BaseConverter(object):
             if neg:
                 res = '-' + res
         return res
+
     convert = staticmethod(convert)
 
 

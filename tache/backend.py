@@ -3,11 +3,10 @@
 """
 Tache
 """
-from functools import wraps
 
-from .utils import NO_VALUE
-from .shortid import short_id
 from .serializer import Serializer
+from .utils import NO_VALUE
+
 
 class BaseBackend(object):
     """
