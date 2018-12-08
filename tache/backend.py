@@ -30,7 +30,7 @@ class BaseBackend(object):
 
 
 class RedisBackend(BaseBackend):
-    def __init__(self, conn, format="JSON"):
+    def __init__(self, conn, format=None):
         self.conn = conn
         self.serializer = Serializer(format=format)
 
