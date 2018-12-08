@@ -41,21 +41,21 @@ class Serializer(object):
     """序列化处理器"""
 
     #: 支持的序列化格式。
-    SUPPORTED_FORMATS = ['YAML', 'JSON', 'PICKLE']
+    SUPPORTED_FORMATS = ['YAML', 'JSON', 'PICKLE', 'BYTES']
 
     def __init__(self, format=None):
         """创建一个序列化处理器。
 
         :param str format: 指定该序列化处理器采用的格式，如 YAML、JSON 等。
         """
-        if format:
+        if format and format != 'BYTES':
             format = format.upper()
             if format in self.SUPPORTED_FORMATS:
                 self.format = format
             else:
                 raise ValueError('unsupported serializaion format')
         else:
-            self.format = None
+            self.format = format
 
     def load(self, stream):
         """从参数 ``stream`` 中获取数据。
@@ -64,7 +64,7 @@ class Serializer(object):
         :type stream: mixed
         :rtype: str|unicode|file
         """
-        if self.format:
+        if self.format and self.format != 'BYTES':
             func_name = ''.join(['_from_', self.format.lower()])
             func = globals()[func_name]
             return func(stream)
@@ -78,7 +78,7 @@ class Serializer(object):
         :type data: mixed
         :rtype: str|unicode
         """
-        if self.format:
+        if self.format and self.format != 'BYTES':
             func_name = ''.join(['_to_', self.format.lower()])
             func = globals()[func_name]
             return func(data)
