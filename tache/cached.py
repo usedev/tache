@@ -9,7 +9,7 @@ from .utils import tag_key_generator, NO_VALUE
 class Cached(object):
 
     def __init__(self, func, backend, key_func, timeout,
-                 namespace, tags, should_cache_fn, tag_prefix):
+                 namespace, tags, should_cache_fn, tag_prefix, key_prefix):
         self._func = func
         self._backend = backend
         self._key_func = key_func
@@ -18,6 +18,7 @@ class Cached(object):
         self._namespace = namespace
         self._should_cache_fn = should_cache_fn
         self._tag_prefix = tag_prefix
+        self._key_prefix = key_prefix
         if isinstance(self._func, (classmethod, staticmethod)):
             functools.update_wrapper(self, self._func.__func__)
         else:
@@ -35,7 +36,7 @@ class Cached(object):
         return wrapped_self
 
     def __call__(self, *args, **kwargs):
-        cache_key = self._key_func(self._namespace, self._func, *args, **kwargs)
+        cache_key = self._key_prefix + self._key_func(self._namespace, self._func, *args, **kwargs)
         if self._tags:
             cache_key = tag_key_generator(self._backend, cache_key, self._tag_prefix,
                                           self._tags, self._timeout, *args, **kwargs)
@@ -47,7 +48,7 @@ class Cached(object):
         return result
 
     def invalidate(self, *args, **kwargs):
-        cache_key = self._key_func(self._namespace, self._func, *args, **kwargs)
+        cache_key = self._key_prefix + self._key_func(self._namespace, self._func, *args, **kwargs)
         if self._tags:
             cache_key = tag_key_generator(self._backend, cache_key, self._tag_prefix,
                                           self._tags, self._timeout, *args, **kwargs)
@@ -64,7 +65,7 @@ class Cached(object):
         return self._func(*args, **kwargs)
 
     def refresh(self, *args, **kwargs):
-        cache_key = self._key_func(self._namespace, self._func, *args, **kwargs)
+        cache_key = self._key_prefix + self._key_func(self._namespace, self._func, *args, **kwargs)
         result = self._func(*args, **kwargs)
         if self._should_cache_fn(result):
             self._backend.set(cache_key, result, self._timeout)

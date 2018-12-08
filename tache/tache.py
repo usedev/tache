@@ -12,10 +12,12 @@ from .utils import (arguments_key_generator,
 
 
 class Tache(object):
-    def __init__(self, backend_cls, default_key_generator=arguments_key_generator, tag_prefix="tag:", **kwargs):
+    def __init__(self, backend_cls, default_key_generator=arguments_key_generator, tag_prefix="tag:", key_prefix="c:",
+                 **kwargs):
         self.backend = backend_cls(**kwargs)
         self.default_key_generator = default_key_generator
         self.tag_prefix = tag_prefix
+        self.key_prefix = key_prefix
 
     def cached(self, key_func=None, timeout=3600, namespace=None, tags=None,
                should_cache_fn=lambda _: True):
@@ -30,7 +32,8 @@ class Tache(object):
                                  namespace=namespace,
                                  tags=tags,
                                  should_cache_fn=should_cache_fn,
-                                 tag_prefix=self.tag_prefix
+                                 tag_prefix=self.tag_prefix,
+                                 key_prefix=self.key_prefix,
                                  )
 
     def invalidate_tag(self, tag):
