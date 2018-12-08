@@ -63,7 +63,8 @@ def tag_key_generator(backend, prefix, tag_prefix, tags, timeout, *args, **kwarg
     for idx, dst_key in enumerate(dst_keys):
         if dst_key is NO_VALUE:
             src_key = src_keys[idx]
-            tag_key = short_id()
+            # tag_key = short_id()
+            tag_key = backend.get_key()
             backend.set(src_key, tag_key, timeout)
             dst_keys[idx] = tag_key
     return prefix + "|" + "-".join(map(str, dst_keys))

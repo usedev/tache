@@ -28,6 +28,9 @@ class BaseBackend(object):
     def mset(self, mapping, timeout):
         raise NotImplementedError()
 
+    def get_key(self):
+        raise NotImplementedError()
+
 
 class RedisBackend(BaseBackend):
     def __init__(self, conn, format=None):
@@ -59,3 +62,6 @@ class RedisBackend(BaseBackend):
             v = self.serializer.encode(v)
             pipe.setex(k, timeout, v)
         pipe.execute()
+
+    def get_key(self):
+        return str(self.conn.incr('tag:id'))
