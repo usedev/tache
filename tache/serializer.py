@@ -106,7 +106,7 @@ class Serializer(object):
 def _from_msgpack(stream):
     """Load data form a JSON file or string."""
     if isinstance(stream, basestring):
-        data = msgpack.unpackb(stream)
+        data = msgpack.unpackb(stream, encoding='utf-8')
     else:
         data = msgpack.unpack(stream)
     return data
