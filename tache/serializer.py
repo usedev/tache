@@ -106,15 +106,15 @@ class Serializer(object):
 def _from_msgpack(stream):
     """Load data form a JSON file or string."""
     if isinstance(stream, basestring):
-        data = msgpack.unpackb(stream, object_hook=lambda d: ObjectDict(d))
+        data = msgpack.unpackb(stream)
     else:
-        data = msgpack.unpack(stream, object_hook=lambda d: ObjectDict(d))
+        data = msgpack.unpack(stream)
     return data
 
 
 def _to_msgpack(data):
     """Dump data into a JSON string."""
-    return msgpack.packb(data, cls=AwareJSONEncoder)
+    return msgpack.packb(data)
 
 
 def _from_pickle(stream):
