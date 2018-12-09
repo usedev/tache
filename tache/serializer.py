@@ -3,6 +3,7 @@
 """
 提供主要用于数据交换的序列化处理机制。
 """
+import msgpack
 
 __all__ = ['Serializer']
 
@@ -41,7 +42,7 @@ class Serializer(object):
     """序列化处理器"""
 
     #: 支持的序列化格式。
-    SUPPORTED_FORMATS = ['YAML', 'JSON', 'PICKLE', 'BYTES']
+    SUPPORTED_FORMATS = ['MSGPACK', 'JSON', 'PICKLE', 'BYTES']
 
     def __init__(self, format=None):
         """创建一个序列化处理器。
@@ -102,25 +103,18 @@ class Serializer(object):
         return self.load(stream)
 
 
-def _from_yaml(stream):
-    """Load data form a YAML file or string."""
-    from yaml import load
-    try:
-        from yaml import CLoader as Loader
-    except ImportError:
-        from yaml import Loader
-    data = load(stream, Loader=Loader)
+def _from_msgpack(stream):
+    """Load data form a JSON file or string."""
+    if isinstance(stream, basestring):
+        data = msgpack.unpackb(stream, object_hook=lambda d: ObjectDict(d))
+    else:
+        data = msgpack.unpack(stream, object_hook=lambda d: ObjectDict(d))
     return data
 
 
-def _to_yaml(data):
-    """Dump data into a YAML string."""
-    from yaml import dump
-    try:
-        from yaml import CDumper as Dumper
-    except ImportError:
-        from yaml import Dumper
-    return dump(data, Dumper=Dumper)
+def _to_msgpack(data):
+    """Dump data into a JSON string."""
+    return msgpack.packb(data, cls=AwareJSONEncoder)
 
 
 def _from_pickle(stream):
